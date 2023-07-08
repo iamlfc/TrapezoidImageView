@@ -10,6 +10,7 @@ import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageView
 import kotlin.math.max
 
+
 /**
  * 梯形图片控件
  *
@@ -54,11 +55,23 @@ class TrapezoidImageView @JvmOverloads constructor(
      * 初始化自定义属性
      */
     private fun initAttributes(context: Context, attrs: AttributeSet?, defStyleAttr: Int) {
-        val attributes = context.theme.obtainStyledAttributes(attrs, R.styleable.TrapezoidImageView, defStyleAttr, 0)
+        val attributes = context.theme.obtainStyledAttributes(
+            attrs,
+            R.styleable.TrapezoidImageView,
+            defStyleAttr,
+            0
+        )
         try {
-            incline = attributes.getDimension(R.styleable.TrapezoidImageView_trapezoidIncline, dpToPx(DEFAULT_INCLINE))
-            radius = attributes.getDimension(R.styleable.TrapezoidImageView_trapezoidRadius, dpToPx(DEFAULT_RADIUS))
-            val shadeColorRes = attributes.getResourceId(R.styleable.TrapezoidImageView_trapezoidShadeColors, 0)
+            incline = attributes.getDimension(
+                R.styleable.TrapezoidImageView_trapezoidIncline,
+                dpToPx(DEFAULT_INCLINE)
+            )
+            radius = attributes.getDimension(
+                R.styleable.TrapezoidImageView_trapezoidRadius,
+                dpToPx(DEFAULT_RADIUS)
+            )
+            val shadeColorRes =
+                attributes.getResourceId(R.styleable.TrapezoidImageView_trapezoidShadeColors, 0)
             if (shadeColorRes != 0) {
                 shadeColor = resources.getIntArray(shadeColorRes)
             }
@@ -131,6 +144,8 @@ class TrapezoidImageView @JvmOverloads constructor(
         canvas.drawColor(Color.TRANSPARENT)
         // 获取圆角梯形路径
         val roundTrapezoidPath = getRoundTrapezoidPath2()
+        canvas.drawFilter =
+            PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
         // 裁剪圆角梯形路径
         canvas.clipPath(roundTrapezoidPath)
         super.onDraw(canvas)
@@ -139,6 +154,8 @@ class TrapezoidImageView @JvmOverloads constructor(
         val shadeBitmap = getShadeBitmap()
         // 遮罩图形绘制混合模式
         mPaint.xfermode = mXfermodeShade
+        mPaint.isAntiAlias = true;    // 设置画笔的锯齿效果。 true是去除
+
         canvas.drawBitmap(shadeBitmap, Matrix(), mPaint)
         mPaint.xfermode = null
         // 回收遮罩位图
@@ -152,7 +169,14 @@ class TrapezoidImageView @JvmOverloads constructor(
         // 获取圆角矩形路径
         val roundRectPath = Path()
         // 向路径中添加圆角矩形
-        roundRectPath.addRoundRect(0f, 0f, mWidth.toFloat(), mHeight.toFloat(), mRadii, Path.Direction.CW)
+        roundRectPath.addRoundRect(
+            0f,
+            0f,
+            mWidth.toFloat(),
+            mHeight.toFloat(),
+            mRadii,
+            Path.Direction.CW
+        )
         roundRectPath.close()
         // 获取梯形路径
         val trapezoidPath = Path()
@@ -171,15 +195,21 @@ class TrapezoidImageView @JvmOverloads constructor(
      */
     private fun getRoundTrapezoidPath2(): Path {
         val trapezoidPath = Path()
+
         // 移动至左上角
         trapezoidPath.moveTo(radius, 0f)
         // 画直线到右上角
-        trapezoidPath.lineTo((mWidth-radius).toFloat(), 0f)
-        trapezoidPath.quadTo(mWidth.toFloat(), 0f, mWidth.toFloat(),   radius)
+        trapezoidPath.lineTo((mWidth - radius).toFloat(), 0f)
+        trapezoidPath.quadTo(mWidth.toFloat(), 0f, mWidth.toFloat(), radius)
 
         // 画直线到右下角
-        trapezoidPath.lineTo(mWidth - incline+radius, (mHeight-radius).toFloat())
-        trapezoidPath.quadTo((mWidth - incline+radius/2).toFloat(), (mHeight).toFloat(),(mWidth - incline).toFloat(),   mHeight.toFloat())
+        trapezoidPath.lineTo(mWidth - incline + radius, (mHeight - radius).toFloat())
+        trapezoidPath.quadTo(
+            (mWidth - incline + radius*2 / 3).toFloat(),
+            (mHeight).toFloat(),
+            (mWidth - incline).toFloat(),
+            mHeight.toFloat()
+        )
 
         // 贝塞尔曲线绘制左下角的圆角
         trapezoidPath.lineTo(radius, mHeight.toFloat())
