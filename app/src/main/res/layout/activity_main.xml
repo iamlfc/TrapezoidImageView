@@ -40,5 +40,15 @@
             app:trapezoidIncline="100dp"
             app:trapezoidRadius="20dp"
             app:trapezoidShadeColors="@array/ShadeColors_3" />
+        <com.fphoenixcorneae.widget.trapezoidview.TrapezoidImageView
+            android:id="@+id/iv_image_4"
+            android:layout_width="match_parent"
+            android:layout_height="185dp"
+            android:layout_marginTop="8dp"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/img_3"
+            app:trapezoidIncline="50dp"
+            app:trapezoidRadius="20dp"
+ />
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

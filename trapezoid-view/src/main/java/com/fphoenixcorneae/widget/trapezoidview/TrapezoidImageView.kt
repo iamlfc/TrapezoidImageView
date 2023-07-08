@@ -130,7 +130,7 @@ class TrapezoidImageView @JvmOverloads constructor(
         // 背景透明
         canvas.drawColor(Color.TRANSPARENT)
         // 获取圆角梯形路径
-        val roundTrapezoidPath = getRoundTrapezoidPath()
+        val roundTrapezoidPath = getRoundTrapezoidPath2()
         // 裁剪圆角梯形路径
         canvas.clipPath(roundTrapezoidPath)
         super.onDraw(canvas)
@@ -174,9 +174,13 @@ class TrapezoidImageView @JvmOverloads constructor(
         // 移动至左上角
         trapezoidPath.moveTo(radius, 0f)
         // 画直线到右上角
-        trapezoidPath.lineTo(mWidth.toFloat(), 0f)
+        trapezoidPath.lineTo((mWidth-radius).toFloat(), 0f)
+        trapezoidPath.quadTo(mWidth.toFloat(), 0f, mWidth.toFloat(),   radius)
+
         // 画直线到右下角
-        trapezoidPath.lineTo(mWidth - incline, mHeight.toFloat())
+        trapezoidPath.lineTo(mWidth - incline+radius, (mHeight-radius).toFloat())
+        trapezoidPath.quadTo((mWidth - incline+radius/2).toFloat(), (mHeight).toFloat(),(mWidth - incline).toFloat(),   mHeight.toFloat())
+
         // 贝塞尔曲线绘制左下角的圆角
         trapezoidPath.lineTo(radius, mHeight.toFloat())
         trapezoidPath.quadTo(0f, mHeight.toFloat(), 0f, mHeight - radius)
