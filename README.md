@@ -6,6 +6,7 @@
 [![](https://jitpack.io/v/FPhoenixCorneaE/TrapezoidImageView.svg)](https://jitpack.io/#FPhoenixCorneaE/TrapezoidImageView)
 
 ![图片预览](https://github.com/FPhoenixCorneaE/TrapezoidImageView/blob/master/images/trapezoid-view.gif)
+![图片预览](https://github.com/iamlfc/TrapezoidImageView/blob/develop/images/qqq.png)
 
 
 How to include it in your project:
