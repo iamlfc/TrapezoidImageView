@@ -4,5 +4,6 @@
         <attr name="trapezoidIncline" format="dimension" />
         <attr name="trapezoidRadius" format="dimension" />
         <attr name="trapezoidShadeColors" format="reference" />
+        <attr name="trapezoidIsShowShade" format="boolean" />
     </declare-styleable>
 </resources>

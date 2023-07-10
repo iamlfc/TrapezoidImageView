@@ -48,6 +48,9 @@ class TrapezoidImageView @JvmOverloads constructor(
             initRadii()
         }
 
+    /** 是否显示渐变遮罩层 */
+    var isShowShade = false
+
     /** 遮罩颜色渐变数组 */
     var shadeColor = DEFAULT_SHADE_COLOR
 
@@ -69,6 +72,10 @@ class TrapezoidImageView @JvmOverloads constructor(
             radius = attributes.getDimension(
                 R.styleable.TrapezoidImageView_trapezoidRadius,
                 dpToPx(DEFAULT_RADIUS)
+            )
+            isShowShade = attributes.getBoolean(
+                R.styleable.TrapezoidImageView_trapezoidIsShowShade,
+                false
             )
             val shadeColorRes =
                 attributes.getResourceId(R.styleable.TrapezoidImageView_trapezoidShadeColors, 0)
@@ -149,17 +156,19 @@ class TrapezoidImageView @JvmOverloads constructor(
         // 裁剪圆角梯形路径
         canvas.clipPath(roundTrapezoidPath)
         super.onDraw(canvas)
+        if (isShowShade) {
+            // 画遮罩
+            val shadeBitmap = getShadeBitmap()
+            // 遮罩图形绘制混合模式
+            mPaint.xfermode = mXfermodeShade
+            mPaint.isAntiAlias = true;    // 设置画笔的锯齿效果。 true是去除
 
-        // 画遮罩
-        val shadeBitmap = getShadeBitmap()
-        // 遮罩图形绘制混合模式
-        mPaint.xfermode = mXfermodeShade
-        mPaint.isAntiAlias = true;    // 设置画笔的锯齿效果。 true是去除
+            canvas.drawBitmap(shadeBitmap, Matrix(), mPaint)
+            mPaint.xfermode = null
+            // 回收遮罩位图
+            shadeBitmap.recycle()
+        }
 
-        canvas.drawBitmap(shadeBitmap, Matrix(), mPaint)
-        mPaint.xfermode = null
-        // 回收遮罩位图
-        shadeBitmap.recycle()
     }
 
     /**
@@ -205,7 +214,7 @@ class TrapezoidImageView @JvmOverloads constructor(
         // 画直线到右下角
         trapezoidPath.lineTo(mWidth - incline + radius, (mHeight - radius).toFloat())
         trapezoidPath.quadTo(
-            (mWidth - incline + radius*2 / 3).toFloat(),
+            (mWidth - incline + radius * 2 / 3).toFloat(),
             (mHeight).toFloat(),
             (mWidth - incline).toFloat(),
             mHeight.toFloat()
